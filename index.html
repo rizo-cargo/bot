@@ -3,18 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Игровой Бот</title>
+    <title>TJA COIN BOT</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; background-color: #121212; color: white; }
-        .container { margin-top: 50px; }
-        button { padding: 10px 20px; font-size: 18px; cursor: pointer; }
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px #ffcc00; }
+            50% { box-shadow: 0 0 20px #ffcc00; }
+            100% { box-shadow: 0 0 5px #ffcc00; }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            background: linear-gradient(180deg, #03001e, #7303c0, #ec38bc, #fdeff9);
+            color: white;
+            overflow: hidden;
+        }
+
+        .container { 
+            margin-top: 50px;
+            padding: 20px;
+        }
+
+        .flag { 
+            width: 200px; 
+            cursor: pointer; 
+            margin-bottom: 20px;
+            border-radius: 10px;
+            animation: pulse 2s infinite;
+            transition: transform 0.3s;
+        }
+
+        .flag:hover {
+            transform: scale(1.2);
+        }
+
+        .neon-btn {
+            padding: 15px 30px;
+            font-size: 20px;
+            cursor: pointer;
+            margin: 10px;
+            border: none;
+            border-radius: 10px;
+            background: #ffcc00;
+            color: black;
+            text-transform: uppercase;
+            font-weight: bold;
+            box-shadow: 0 0 10px #ffcc00;
+            animation: glow 1.5s infinite alternate;
+        }
+
+        .balance-box {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            margin: 20px;
+        }
+
+        .balance-number {
+            font-size: 50px;
+            font-weight: bold;
+            color: #ffcc00;
+            text-shadow: 0 0 15px #ffcc00;
+        }
+
+        .income-text {
+            font-size: 18px;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Ваш баланс: <span id="balance">0</span> монет</h1>
-        <button onclick="tap()">Тапнуть (+1 монета)</button>
+        <h1 style="text-shadow: 0 0 10px white;">✨ TJA COIN ✨</h1>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Flag_of_Tajikistan.svg/2560px-Flag_of_Tajikistan.svg.png" 
+             alt="Флаг Таджикистана" class="flag" onclick="tap()">
+        
+        <div class="balance-box">
+            <h2>Баланс:</h2>
+            <div class="balance-number" id="balance">0</div>
+            <p class="income-text">Доход в час: <span id="income">0</span> монет</p>
+        </div>
+        
+        <button class="neon-btn" onclick="claim()">💰 Забрать прибыль</button>
     </div>
 
     <script>
@@ -24,18 +102,24 @@
         let userId = tg.initDataUnsafe?.user?.id || 1;
         let apiUrl = "http://127.0.0.1:8000"; // Замени на свой сервер
 
-        async function getBalance() {
+        async function updateUI() {
             let response = await fetch(`${apiUrl}/get_balance/${userId}`);
             let data = await response.json();
             document.getElementById("balance").innerText = data.balance;
+            document.getElementById("income").innerText = data.income_per_hour;
         }
 
         async function tap() {
-            await fetch(`${apiUrl}/update_balance/${userId}/1`, { method: "POST" });
-            getBalance();
+            await fetch(`${apiUrl}/tap/${userId}`, { method: "POST" });
+            updateUI();
         }
 
-        getBalance();
+        async function claim() {
+            await fetch(`${apiUrl}/claim_income/${userId}`, { method: "POST" });
+            updateUI();
+        }
+
+        updateUI();
     </script>
 </body>
 </html>
