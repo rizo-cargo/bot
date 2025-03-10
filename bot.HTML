@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TJS Coin</title>
+  <style>
+    body { 
+      text-align: center; 
+      font-family: Arial, sans-serif;
+      margin: 0; 
+      padding: 0;
+      background-color: #f0f0f0;
+    }
+    #gameContainer {
+      display: none;
+    }
+    #flag {
+      width: 200px;
+      cursor: pointer;
+    }
+    #tokenCount {
+      font-size: 24px;
+      margin-top: 20px;
+    }
+    #earnButton {
+      font-size: 20px;
+      padding: 10px 20px;
+      cursor: pointer;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+  <h1>TJS Coin</h1>
+  <button id="earnButton">Начать зарабатывать</button>
+  
+  <div id="gameContainer">
+    <!-- Флаг Таджикистана с Википедии -->
+    <img id="flag" src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Flag_of_Tajikistan.svg" alt="Флаг Таджикистана">
+    <div id="tokenCount">Токены: 0</div>
+  </div>
+
+  <script>
+    let tokens = 0;
+    const earnButton = document.getElementById('earnButton');
+    const gameContainer = document.getElementById('gameContainer');
+    const flag = document.getElementById('flag');
+    const tokenCount = document.getElementById('tokenCount');
+
+    // При нажатии на кнопку "Начать зарабатывать" скрываем её и показываем игровой блок
+    earnButton.addEventListener('click', function() {
+      earnButton.style.display = 'none';
+      gameContainer.style.display = 'block';
+    });
+
+    // При нажатии на флаг увеличиваем счетчик токенов
+    flag.addEventListener('click', function() {
+      tokens++;
+      tokenCount.textContent = 'Токены: ' + tokens;
+    });
+  </script>
+</body>
+</html>
